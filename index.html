@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Kit Playground — 컴포넌트 & 다이얼로그 통합</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<!-- Prism 코드 구문 강조 테마(라이트). app.css보다 먼저 — app.css가 패널 톤을 override -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-one-light.min.css">
+<link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+<div class="uk-app">
+  <aside class="uk-side">
+    <div class="uk-brand">
+      <h1><i data-lucide="layout-grid"></i> UI Kit Playground</h1>
+      <p>89 components · copy &amp; paste ready</p>
+    </div>
+    <div class="uk-searchwrap">
+      <i data-lucide="search" class="uk-search-ic"></i>
+      <input id="uk-search" type="search" placeholder="컴포넌트 검색 (한글/영문)…" autocomplete="off">
+    </div>
+    <nav class="uk-menu" id="uk-menu"></nav>
+  </aside>
+  <main class="uk-main"><div id="uk-view"></div></main>
+</div>
+
+<!-- Prism: 자동 하이라이트 끄고(openItem에서 수동 호출) 코어+기본 언어(markup/css/js) 로드 -->
+<script>window.Prism = window.Prism || {}; window.Prism.manual = true;</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+<!-- Lucide 아이콘 (셸 UI용). app.js가 lucide.createIcons()를 호출한다. -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- 로딩 순서(필수): builders → data/* → app. 데이터가 app 정규화보다 먼저 로드돼야 한다. -->
+<script src="js/builders.js"></script>
+<script src="data/catalog.js"></script>
+<script src="data/uixbase.js"></script>
+<script src="data/feedback.js"></script>
+<script src="data/modals.js"></script>
+<script src="data/prototypes.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Component Portfolio — Claude Code 실전</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #FFFFFF;
+    --panel:     #FAFAFA;
+    --text:      #111111;
+    --muted:     #6B7280;
+    --faint:     #9CA3AF;
+    --border:    #E5E7EB;
+    --border-d:  #D1D5DB;
+    --accent:    #2563EB;
+    --accent-bg: #EFF4FF;
+    --code-bg:   #1A1D23;
+    --code-text: #E6EDF3;
+    --code-faint:#7D8590;
+    --font-ui:   'Noto Sans KR', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  }
+
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-ui);
+    color: var(--text);
+    background: var(--bg);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 288px 1fr;
+    grid-template-areas:
+      "header header"
+      "sidebar main";
+    height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    grid-area: header;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header h1 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .header .sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .header .count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--faint);
+  }
+  .header .count b { color: var(--text); font-weight: 600; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    grid-area: sidebar;
+    border-right: 1px solid var(--border);
+    background: var(--panel);
+    overflow-y: auto;
+    padding-bottom: 32px;
+  }
+  .search {
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    z-index: 2;
+  }
+  .search input {
+    width: 100%;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--text);
+    padding: 8px 10px;
+    border: 1px solid var(--border-d);
+    border-radius: 6px;
+    background: var(--bg);
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .search input:focus { border-color: var(--accent); }
+  .search input::placeholder { color: var(--faint); }
+
+  .group-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding: 18px 16px 6px;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 7px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--text);
+    border-left: 2px solid transparent;
+  }
+  .item:hover { background: #F0F1F3; }
+  .item.active {
+    background: var(--accent-bg);
+    border-left-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .item .no {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--faint);
+    min-width: 18px;
+  }
+  .item.active .no { color: var(--accent); }
+  .item .en {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--faint);
+  }
+  .item.todo .name { color: var(--faint); }
+
+  /* ── Main ── */
+  .main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .detail-head {
+    padding: 20px 24px 0;
+  }
+  .detail-head .row { display: flex; align-items: baseline; gap: 10px; }
+  .detail-head .no {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .detail-head h2 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .detail-head .en {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--faint);
+  }
+  .detail-head p {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 60ch;
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 18px 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 9px 14px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-spacer { margin-left: auto; }
+  .copy-btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    padding: 5px 10px;
+    border: 1px solid var(--border-d);
+    border-radius: 6px;
+    background: var(--bg);
+    cursor: pointer;
+    transition: border-color 120ms, color 120ms;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .copy-btn[disabled] { opacity: 0; pointer-events: none; }
+
+  /* ── Pane ── */
+  .pane {
+    flex: 1;
+    overflow: auto;
+    margin: 16px 24px 24px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 0;
+  }
+  .pane.code { background: var(--code-bg); border-color: #2A3038; }
+
+  .preview-frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #FAFAFA;
+  }
+
+  pre.code-block {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--code-text);
+    padding: 18px 20px;
+    white-space: pre;
+    tab-size: 2;
+  }
+  .empty-code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--code-faint);
+    padding: 24px;
+  }
+
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--panel);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-d); border-radius: 5px; }
+  .pane.code ::-webkit-scrollbar-thumb,
+  .pane.code::-webkit-scrollbar-thumb { background: #3A414C; }
+
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; grid-template-areas: "header" "main"; }
+    .sidebar { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <h1>Component Portfolio</h1>
+    <span class="sub">33 컴포넌트 + 공통 모달 시스템</span>
+    <span class="count"><b id="implCount">0</b> 구현 / 39 총</span>
+  </header>
+
+  <nav class="sidebar">
+    <div class="search">
+      <input id="search" type="text" placeholder="컴포넌트 검색…" autocomplete="off">
+    </div>
+    <div id="list"></div>
+  </nav>
+
+  <main class="main">
+    <div class="detail-head">
+      <div class="row">
+        <span class="no" id="dNo"></span>
+        <h2 id="dName"></h2>
+        <span class="en" id="dEn"></span>
+      </div>
+      <p id="dDesc"></p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="preview">미리보기</button>
+      <button class="tab" data-tab="html">HTML</button>
+      <button class="tab" data-tab="css">CSS</button>
+      <button class="tab" data-tab="js">JS</button>
+      <span class="tab-spacer"></span>
+      <button class="copy-btn" id="copyBtn" disabled>복사</button>
+    </div>
+
+    <div class="pane" id="pane"></div>
+  </main>
+</div>
+
+<script>
+/* ──────────────────────────────────────────────
+   컴포넌트 데이터
+   no, name(한), en(영), group, desc, html, css, js
+   html/css/js 가 빈 문자열이면 "미구현([구현 영역])"
+────────────────────────────────────────────── */
+const RESET = `*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',-apple-system,sans-serif;color:#111;
+display:flex;align-items:center;justify-content:center;
+min-height:100vh;padding:32px;gap:16px;flex-wrap:wrap}`;
+
+const components = [
+  /* ── 그룹 1: 기본 입력·액션 ── */
+  { no:'01', name:'버튼', en:'Button', group:'기본 입력 · 액션',
+    desc:'상태(hover/active/disabled)와 variant를 다루는 가장 기본 요소.',
+    html:
+`<button class="btn btn--primary">저장</button>
+<button class="btn btn--ghost">취소</button>
+<button class="btn btn--primary" disabled>비활성</button>`,
+    css:
+`.btn{font:500 14px/1 'Noto Sans KR',sans-serif;
+  padding:10px 18px;border-radius:6px;cursor:pointer;
+  border:1px solid transparent;transition:background 120ms,border-color 120ms}
+.btn--primary{background:#2563EB;color:#fff}
+.btn--primary:hover{background:#1D4ED8}
+.btn--ghost{background:#fff;color:#111;border-color:#D1D5DB}
+.btn--ghost:hover{border-color:#9CA3AF}
+.btn:disabled{opacity:.45;cursor:not-allowed}`,
+    js:
+`document.querySelectorAll('.btn:not([disabled])').forEach(b=>{
+  b.addEventListener('click',()=>console.log('clicked:',b.textContent));
+});` },
+
+  { no:'02', name:'아이콘 버튼', en:'Icon Button', group:'기본 입력 · 액션', desc:'', html:'', css:'', js:'' },
+
+  { no:'03', name:'토글 스위치', en:'Toggle Switch', group:'기본 입력 · 액션',
+    desc:'on/off 두 상태. 기능적 상태 변화에만 transition을 둔다.',
+    html:
+`<button class="switch" role="switch" aria-checked="false">
+  <span class="switch__track"><span class="switch__thumb"></span></span>
+  <span class="switch__label">알림 받기</span>
+</button>`,
+    css:
+`.switch{display:inline-flex;align-items:center;gap:10px;
+  border:none;background:none;cursor:pointer;font:14px 'Noto Sans KR',sans-serif}
+.switch__track{width:40px;height:22px;border-radius:11px;
+  background:#D1D5DB;position:relative;transition:background 130ms}
+.switch__thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;
+  border-radius:50%;background:#fff;transition:transform 130ms}
+.switch[aria-checked="true"] .switch__track{background:#2563EB}
+.switch[aria-checked="true"] .switch__thumb{transform:translateX(18px)}`,
+    js:
+`const sw=document.querySelector('.switch');
+sw.addEventListener('click',()=>{
+  const on=sw.getAttribute('aria-checked')==='true';
+  sw.setAttribute('aria-checked',String(!on));
+});` },
+
+  { no:'04', name:'체크박스', en:'Checkbox', group:'기본 입력 · 액션', desc:'', html:'', css:'', js:'' },
+  { no:'05', name:'라디오 버튼', en:'Radio', group:'기본 입력 · 액션', desc:'', html:'', css:'', js:'' },
+  { no:'06', name:'텍스트 입력', en:'Text Input', group:'기본 입력 · 액션', desc:'', html:'', css:'', js:'' },
+  { no:'07', name:'멀티라인 입력', en:'Textarea', group:'기본 입력 · 액션', desc:'', html:'', css:'', js:'' },
+  { no:'08', name:'셀렉트', en:'Select', group:'기본 입력 · 액션', desc:'', html:'', css:'', js:'' },
+  { no:'09', name:'슬라이더', en:'Slider', group:'기본 입력 · 액션', desc:'', html:'', css:'', js:'' },
+  { no:'10', name:'검색 입력', en:'Search Bar', group:'기본 입력 · 액션', desc:'', html:'', css:'', js:'' },
+
+  /* ── 그룹 2: 네비게이션 ── */
+  { no:'11', name:'햄버거 버튼', en:'Hamburger', group:'네비게이션',
+    desc:'세 줄 ↔ X 모핑. 상태 전환에만 transform transition을 사용.',
+    html:
+`<button class="hamburger" aria-label="메뉴 열기" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>`,
+    css:
+`.hamburger{width:44px;height:44px;border:1px solid #D1D5DB;border-radius:6px;
+  background:#fff;cursor:pointer;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;gap:5px}
+.hamburger span{display:block;width:22px;height:2px;background:#111;
+  transition:transform 140ms,opacity 140ms}
+.hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}`,
+    js:
+`const h=document.querySelector('.hamburger');
+h.addEventListener('click',()=>{
+  const open=h.getAttribute('aria-expanded')==='true';
+  h.setAttribute('aria-expanded',String(!open));
+  h.setAttribute('aria-label',open?'메뉴 열기':'메뉴 닫기');
+});` },
+
+  { no:'12', name:'상단 내비게이션 바', en:'Navbar', group:'네비게이션', desc:'', html:'', css:'', js:'' },
+  { no:'13', name:'사이드바 / 드로어', en:'Sidebar', group:'네비게이션', desc:'', html:'', css:'', js:'' },
+
+  { no:'14', name:'탭', en:'Tabs', group:'네비게이션',
+    desc:'활성 탭 상태와 패널 전환. 밑줄로 활성 표시(기능적).',
+    html:
+`<div class="tabs-c">
+  <div class="tabs-c__nav" role="tablist">
+    <button class="tabs-c__tab is-active" data-i="0">개요</button>
+    <button class="tabs-c__tab" data-i="1">설치</button>
+    <button class="tabs-c__tab" data-i="2">사용법</button>
+  </div>
+  <div class="tabs-c__panel" data-p="0">개요 내용입니다.</div>
+  <div class="tabs-c__panel" data-p="1" hidden>설치 방법입니다.</div>
+  <div class="tabs-c__panel" data-p="2" hidden>사용법입니다.</div>
+</div>`,
+    css:
+`.tabs-c{width:320px}
+.tabs-c__nav{display:flex;gap:2px;border-bottom:1px solid #E5E7EB}
+.tabs-c__tab{font:500 13px 'Noto Sans KR',sans-serif;color:#6B7280;
+  padding:9px 14px;border:none;background:none;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs-c__tab.is-active{color:#2563EB;border-bottom-color:#2563EB}
+.tabs-c__panel{padding:16px 4px;font-size:14px;color:#111}`,
+    js:
+`const root=document.querySelector('.tabs-c');
+root.querySelectorAll('.tabs-c__tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    const i=t.dataset.i;
+    root.querySelectorAll('.tabs-c__tab').forEach(x=>x.classList.toggle('is-active',x===t));
+    root.querySelectorAll('.tabs-c__panel').forEach(p=>p.hidden=p.dataset.p!==i);
+  });
+});` },
+
+  { no:'15', name:'브레드크럼', en:'Breadcrumb', group:'네비게이션', desc:'', html:'', css:'', js:'' },
+  { no:'16', name:'페이지네이션', en:'Pagination', group:'네비게이션', desc:'', html:'', css:'', js:'' },
+  { no:'17', name:'단계 표시기', en:'Stepper', group:'네비게이션', desc:'', html:'', css:'', js:'' },
+
+  /* ── 그룹 3: 콘텐츠 표시 ── */
+  { no:'18', name:'카드', en:'Card', group:'콘텐츠 표시',
+    desc:'이미지·텍스트·액션을 담는 레이아웃 기본 단위.',
+    html:
+`<article class="card">
+  <div class="card__media"></div>
+  <div class="card__body">
+    <h3 class="card__title">Claude Code 입문</h3>
+    <p class="card__text">설치부터 첫 세션까지 30분 안에 끝내는 가이드.</p>
+    <button class="card__cta">자세히 보기</button>
+  </div>
+</article>`,
+    css:
+`.card{width:260px;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;background:#fff}
+.card__media{height:120px;background:#F3F4F6;border-bottom:1px solid #E5E7EB}
+.card__body{padding:16px}
+.card__title{font-size:15px;font-weight:700}
+.card__text{font-size:13px;color:#6B7280;margin:6px 0 14px;line-height:1.5}
+.card__cta{font:500 13px 'Noto Sans KR',sans-serif;color:#2563EB;
+  background:none;border:none;cursor:pointer;padding:0}
+.card__cta:hover{text-decoration:underline}`,
+    js:'' },
+
+  { no:'19', name:'아코디언', en:'Accordion', group:'콘텐츠 표시', desc:'', html:'', css:'', js:'' },
+  { no:'20', name:'데이터 테이블', en:'Table', group:'콘텐츠 표시', desc:'', html:'', css:'', js:'' },
+  { no:'21', name:'아바타', en:'Avatar', group:'콘텐츠 표시', desc:'', html:'', css:'', js:'' },
+
+  { no:'22', name:'뱃지', en:'Badge', group:'콘텐츠 표시',
+    desc:'상태 점·숫자 카운터. 색은 의미(상태)에만 사용.',
+    html:
+`<span class="badge">기본</span>
+<span class="badge badge--accent">신규</span>
+<span class="badge badge--count">12</span>`,
+    css:
+`.badge{display:inline-flex;align-items:center;font:600 12px 'JetBrains Mono',monospace;
+  padding:3px 8px;border-radius:6px;background:#F3F4F6;color:#374151}
+.badge--accent{background:#EFF4FF;color:#2563EB}
+.badge--count{min-width:22px;height:22px;justify-content:center;
+  border-radius:11px;background:#111;color:#fff;padding:0 6px}`,
+    js:'' },
+
+  { no:'23', name:'칩 / 태그', en:'Chip', group:'콘텐츠 표시', desc:'', html:'', css:'', js:'' },
+
+  { no:'24', name:'툴팁', en:'Tooltip', group:'콘텐츠 표시',
+    desc:'호버 시 보조 설명. 위치는 트리거 기준으로 계산.',
+    html:
+`<span class="tip">
+  <button class="tip__trigger">호버하세요</button>
+  <span class="tip__bubble" role="tooltip">단축키: Ctrl + K</span>
+</span>`,
+    css:
+`.tip{position:relative;display:inline-block}
+.tip__trigger{font:500 13px 'Noto Sans KR',sans-serif;padding:8px 14px;
+  border:1px solid #D1D5DB;border-radius:6px;background:#fff;cursor:pointer}
+.tip__bubble{position:absolute;bottom:calc(100% + 8px);left:50%;
+  transform:translateX(-50%);white-space:nowrap;
+  background:#111;color:#fff;font-size:12px;padding:6px 10px;border-radius:6px;
+  opacity:0;pointer-events:none;transition:opacity 120ms}
+.tip:hover .tip__bubble,.tip__trigger:focus + .tip__bubble{opacity:1}`,
+    js:'' },
+
+  { no:'25', name:'캐러셀', en:'Carousel', group:'콘텐츠 표시', desc:'', html:'', css:'', js:'' },
+
+  /* ── 그룹 4: 상태·피드백 ── */
+  { no:'26', name:'진행 바', en:'Progress Bar', group:'상태 · 피드백',
+    desc:'퍼센트 값을 시각화. 폭 변화만 transition.',
+    html:
+`<div class="prog">
+  <div class="prog__bar" style="width:0%"></div>
+</div>
+<button class="prog__btn">진행</button>`,
+    css:
+`.prog{width:280px;height:8px;border-radius:4px;background:#F3F4F6;overflow:hidden}
+.prog__bar{height:100%;background:#2563EB;width:0;transition:width 200ms}
+.prog__btn{margin-top:14px;font:500 13px 'Noto Sans KR',sans-serif;
+  padding:8px 16px;border:1px solid #D1D5DB;border-radius:6px;background:#fff;cursor:pointer}`,
+    js:
+`let p=0;const bar=document.querySelector('.prog__bar');
+document.querySelector('.prog__btn').addEventListener('click',()=>{
+  p=(p+25)%125;if(p>100)p=0;bar.style.width=p+'%';
+});` },
+
+  { no:'27', name:'로딩 스피너', en:'Spinner', group:'상태 · 피드백', desc:'', html:'', css:'', js:'' },
+  { no:'28', name:'스켈레톤', en:'Skeleton', group:'상태 · 피드백', desc:'', html:'', css:'', js:'' },
+  { no:'29', name:'빈 상태', en:'Empty State', group:'상태 · 피드백', desc:'', html:'', css:'', js:'' },
+  { no:'30', name:'별점', en:'Rating', group:'상태 · 피드백', desc:'', html:'', css:'', js:'' },
+
+  /* ── 그룹 5: 고급 인터랙션 ── */
+  { no:'31', name:'드롭다운 메뉴', en:'Dropdown Menu', group:'고급 인터랙션', desc:'', html:'', css:'', js:'' },
+  { no:'32', name:'팝오버', en:'Popover', group:'고급 인터랙션', desc:'', html:'', css:'', js:'' },
+  { no:'33', name:'날짜 선택기', en:'Date Picker', group:'고급 인터랙션', desc:'', html:'', css:'', js:'' },
+
+  /* ── 캡스톤: 공통 모달 시스템 ── */
+  { no:'M1', name:'경고 모달', en:'Alert Modal', group:'공통 모달 시스템',
+    desc:'단일 확인 오버레이. ESC·배경 클릭으로 닫기.',
+    html:
+`<button class="open">경고 모달 열기</button>
+<div class="overlay" hidden>
+  <div class="modal" role="alertdialog" aria-modal="true">
+    <h3 class="modal__title">변경 사항이 저장되지 않았습니다</h3>
+    <p class="modal__text">계속 진행하면 작업 내용이 사라집니다.</p>
+    <div class="modal__actions">
+      <button class="modal__ok">확인</button>
+    </div>
+  </div>
+</div>`,
+    css:
+`.open{font:500 13px 'Noto Sans KR',sans-serif;padding:9px 16px;
+  border:1px solid #D1D5DB;border-radius:6px;background:#fff;cursor:pointer}
+.overlay{position:fixed;inset:0;background:rgba(17,17,17,.45);
+  display:flex;align-items:center;justify-content:center;padding:24px}
+.overlay[hidden]{display:none}
+.modal{width:340px;background:#fff;border-radius:8px;padding:22px;border:1px solid #E5E7EB}
+.modal__title{font-size:15px;font-weight:700}
+.modal__text{font-size:13px;color:#6B7280;margin:8px 0 18px;line-height:1.5}
+.modal__actions{display:flex;justify-content:flex-end}
+.modal__ok{font:500 13px 'Noto Sans KR',sans-serif;padding:8px 18px;
+  border:none;border-radius:6px;background:#2563EB;color:#fff;cursor:pointer}`,
+    js:
+`const ov=document.querySelector('.overlay');
+document.querySelector('.open').onclick=()=>ov.hidden=false;
+document.querySelector('.modal__ok').onclick=()=>ov.hidden=true;
+ov.onclick=e=>{if(e.target===ov)ov.hidden=true};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')ov.hidden=true});` },
+
+  { no:'M2', name:'확인 모달', en:'Confirm Modal', group:'공통 모달 시스템', desc:'', html:'', css:'', js:'' },
+  { no:'M3', name:'알림', en:'Notification', group:'공통 모달 시스템', desc:'', html:'', css:'', js:'' },
+
+  { no:'M4', name:'토스트', en:'Toast', group:'공통 모달 시스템',
+    desc:'짧은 임시 메시지. 큐 관리 + 자동 소멸 타이머.',
+    html:
+`<button class="trigger">토스트 띄우기</button>
+<div class="toast-stack" id="stack"></div>`,
+    css:
+`.trigger{font:500 13px 'Noto Sans KR',sans-serif;padding:9px 16px;
+  border:1px solid #D1D5DB;border-radius:6px;background:#fff;cursor:pointer}
+.toast-stack{position:fixed;bottom:20px;right:20px;display:flex;
+  flex-direction:column;gap:8px;align-items:flex-end}
+.toast{background:#111;color:#fff;font-size:13px;padding:11px 16px;
+  border-radius:6px;min-width:200px}`,
+    js:
+`let n=0;const stack=document.getElementById('stack');
+document.querySelector('.trigger').addEventListener('click',()=>{
+  n++;const t=document.createElement('div');
+  t.className='toast';t.textContent='저장되었습니다 ('+n+')';
+  stack.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+});` },
+
+  { no:'M5', name:'스낵바', en:'Snackbar', group:'공통 모달 시스템', desc:'', html:'', css:'', js:'' },
+  { no:'M6', name:'바텀 시트', en:'Bottom Sheet', group:'공통 모달 시스템', desc:'', html:'', css:'', js:'' },
+];
+
+/* ── 렌더링 ── */
+const listEl   = document.getElementById('list');
+const paneEl   = document.getElementById('pane');
+const searchEl = document.getElementById('search');
+const copyBtn  = document.getElementById('copyBtn');
+let current = null;
+let activeTab = 'preview';
+
+document.getElementById('implCount').textContent =
+  components.filter(c => c.html || c.css || c.js).length;
+
+const isImpl = c => !!(c.html || c.css || c.js);
+
+function buildList(filter='') {
+  listEl.innerHTML = '';
+  const q = filter.trim().toLowerCase();
+  const groups = [...new Set(components.map(c => c.group))];
+  groups.forEach(g => {
+    const items = components.filter(c =>
+      c.group === g &&
+      (!q || c.name.toLowerCase().includes(q) || c.en.toLowerCase().includes(q)));
+    if (!items.length) return;
+    const label = document.createElement('div');
+    label.className = 'group-label';
+    label.textContent = g;
+    listEl.appendChild(label);
+    items.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'item' + (isImpl(c) ? '' : ' todo') +
+        (current && current.no === c.no ? ' active' : '');
+      btn.innerHTML =
+        `<span class="no">${c.no}</span>` +
+        `<span class="name">${c.name}</span>` +
+        `<span class="en">${c.en}</span>`;
+      btn.addEventListener('click', () => select(c));
+      listEl.appendChild(btn);
+    });
+  });
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildSrcdoc(c) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">` +
+    `<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">` +
+    `<style>${RESET}\n${c.css}</style></head><body>${c.html}` +
+    `<script>${c.js}<\/script></body></html>`;
+}
+
+function renderPane() {
+  copyBtn.disabled = true;
+  if (activeTab === 'preview') {
+    paneEl.className = 'pane';
+    if (!isImpl(current)) {
+      paneEl.innerHTML = `<div class="placeholder">[구현 영역]</div>`;
+      return;
+    }
+    const f = document.createElement('iframe');
+    f.className = 'preview-frame';
+    f.setAttribute('sandbox', 'allow-scripts');
+    f.srcdoc = buildSrcdoc(current);
+    paneEl.innerHTML = '';
+    paneEl.appendChild(f);
+  } else {
+    paneEl.className = 'pane code';
+    const code = current[activeTab];
+    if (!code) {
+      paneEl.innerHTML = `<div class="empty-code">[내용없음]</div>`;
+      return;
+    }
+    paneEl.innerHTML = `<pre class="code-block">${escapeHtml(code)}</pre>`;
+    copyBtn.disabled = false;
+  }
+}
+
+function select(c) {
+  current = c;
+  activeTab = 'preview';
+  document.getElementById('dNo').textContent = c.no;
+  document.getElementById('dName').textContent = c.name;
+  document.getElementById('dEn').textContent = c.en;
+  document.getElementById('dDesc').textContent = c.desc || '[내용없음]';
+  document.querySelectorAll('.tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.tab === 'preview'));
+  buildList(searchEl.value);
+  renderPane();
+}
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    activeTab = t.dataset.tab;
+    document.querySelectorAll('.tab').forEach(x =>
+      x.classList.toggle('active', x === t));
+    renderPane();
+  });
+});
+
+copyBtn.addEventListener('click', async () => {
+  const code = current[activeTab];
+  if (!code) return;
+  try {
+    await navigator.clipboard.writeText(code);
+    copyBtn.textContent = '복사됨';
+    setTimeout(() => copyBtn.textContent = '복사', 1200);
+  } catch (e) {
+    copyBtn.textContent = '실패';
+    setTimeout(() => copyBtn.textContent = '복사', 1200);
+  }
+});
+
+searchEl.addEventListener('input', () => buildList(searchEl.value));
+
+/* 초기화 — 첫 구현 컴포넌트 선택 */
+select(components.find(isImpl));
+</script>
+</body>
+</html>
