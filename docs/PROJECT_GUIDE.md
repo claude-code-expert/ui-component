@@ -31,7 +31,7 @@
 ├─ .github/workflows/deploy.yml  main 푸시 → GitHub Pages 자동 배포
 ├─ .nojekyll                   Jekyll 비활성화
 ├─ CLAUDE.md / README.md / LICENSE
-└─ extract-my-prompts.sh / Prompt.md   세션 프롬프트 추출 스크립트 & 기록(개발 보조)
+└─ extract-my-prompts.sh / Prompt.md   세션 프롬프트 추출 스크립트 & 누적 기록(수기 수정 보존, 개발 보조)
 ```
 
 ### 파일별 책임 요약

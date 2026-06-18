@@ -2,10 +2,22 @@
 
 - 프로젝트: `/Users/codevillain/Claude-Code-Expert/ui-component`
 - 범위: cwd 전체 합본
-- 추출 시각: 2026-06-18 18:25:26
-- 세션 수: 5 / 프롬프트 수: 24
+- 추출 시각: 2026-06-18 21:22:52
+- 세션 수: 6 / 프롬프트 수: 30
 
 ---
+### 데스크탑 앱에서 입력한 자료 조사용 프롬프트 
+https://careerfoundry.com/en/blog/ui-design/ui-element-glossary/
+
+32가지 프론트엔드 UI 엘리먼트 사전집 사이트입니다.
+해당 요소를 각각 UI로 표현해서 미리보기와 함께 소스를 확인하는 프론트엔드 포트폴리오 및 데모 사이트를 구축해야 합니다.
+다음의 사항을 기준으로 html 데모 사이트를 만들어주세요
+
+좌측은 32가지 요소 리스트업 메뉴
+우측은 좌측메뉴 클릭시 보여지는 메인 컨텐츠로 해당 클릭한 element 의 미리보기를 제공해야 하며, 탭으로 html, css, javascript 소스들을 각각 확인할 수 있어야 함
+Anti ai slop 기법을 적용하여 디자인, 폰트, 아이콘 등의 요소에 AI 전형 디자인이나 컬러를 제외
+사이트 배경 컬러는 밝은 배경 색으로 하며 폰트는 블랙 계열로 화면에 선명하게 보여야 합니다.
+
 
 ### 1. 2026-06-14
 
@@ -100,37 +112,32 @@ init 브랜치에 커밋하고 푸시해
 
 ### 18. 2026-06-18
 
-서버 띄우는 명령어 알려줘
-
-### 19. 2026-06-18
 
 서버 강제 종료하고 실행하는 명령어로 알려줘
 
 ### 20. 2026-06-18
 
-<task-notification>
-<task-id>bg38150ym</task-id>
-<tool-use-id>toolu_01DVS2ekgoyHVFtD9Gnwcf4H</tool-use-id>
-<output-file>/private/tmp/claude-501/-Users-codevillain-Claude-Code-Expert-ui-component/1c32857a-f959-496b-a3fc-9bcfd4db954f/tasks/bg38150ym.output</output-file>
-<status>killed</status>
-<summary>Background command "Start static HTTP server at repo root (background)" was stopped</summary>
-</task-notification>
+좌측 엘리먼트 리스트에 기본 바닐라 스타일 요소는 삭제 해주고, 섹션별 구분 타이틀 영역은 테두리로 강조 효과를 줘서 구분을 할수 있도록 해(예, 공통 모달 시스템, 피드백 알림패턴 등) 전체 항목들을 tailwind 방식으로 통일해서 보여줘. 엘리먼트 버튼 클릭시 좌측에 blockquote 테두리가 나오는데 이거는 anti ai slop 에 위배되, 해당 테두리 삭제하고 그냥 클릭시 선택효과만 1px 로 테두리 씌워
 
 ### 21. 2026-06-18
 
-좌측 엘리먼트 리스트에 기본 바닐라 스타일 요소는 삭제 해주고, 섹션별 구분 타이틀 영역은 테두리로 강조 효과를 줘서 구분을 할수 있도록 해(예, 공통 모달 시스템, 피드백 알림패턴 등) 전체 항목들을 tailwind 방식으로 통일해서 보여줘. 엘리먼트 버튼 클릭시 좌측에 blockquote 테두리가 나오는데 이거는 anti ai slop 에 위배되, 해당 테두리 삭제하고 그냥 클릭시 선택효과만 1px 로 테두리 씌워
+Uncaught TypeError: Cannot read properties of undefined (reading 'forEach')
+    at app.js:15:11
+    at app.js:237:3 
+
+이 에러 수정해줘 
 
 ### 22. 2026-06-18
 
-Uncaught TypeError: Cannot read properties of undefined (reading 'forEach')
-    at app.js:15:11
-    at app.js:237:3
+노티피케이션과 토스트 등에 라디우스 효과와 알약같은 좌측 테두리가 적용되어있어 모든 페이지 요소에서 이 디자인 요소 제외해 @.claude/rules/anti-ai-slop.md  다시 업데이트 했으니까 참고해서 패치해
+
 
 ### 23. 2026-06-18
 
-notification과 toast 테두리 역시 ai slop  효과가 적용된 상태야. 제거하고 테두리 색 강조효과만 적용해
+html, css, javascript 탭에서 소스 조회시 코드하이라이트가 적용되어야 해. 코드베이스 분석해서 코드 하이라이트 적용하는 라이브러리 패치 진행해
 
 ### 24. 2026-06-18
 
-여전히 노티피케이션과 토스트 등에 라디우스 효과와 알약같은 좌측 테두리가 적용되어있어 모든 페이지 요소에서 이 디자인 요소 제외해 @.claude/rules/anti-ai-slop.md  다시 업데이트 했으니까 참고해서 패치해
+메인에 푸시해, 메인 푸시후 자동으로 깃허브 엑션으로 깃허브 페이지에 배포 걸어줘 
+
 

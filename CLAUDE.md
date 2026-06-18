@@ -24,11 +24,12 @@ open index.html
 node --check js/app.js
 
 # 세션 프롬프트를 Markdown으로 추출 (jq 불필요, python3 사용)
-./extract-my-prompts.sh --all      # 이 폴더의 모든 세션 합본 → Prompt.md
+./extract-my-prompts.sh --append   # 기존 Prompt.md 보존 + 신규 프롬프트만 이어붙임(증분, 훅이 쓰는 모드)
+./extract-my-prompts.sh --all      # 전체 재생성(덮어쓰기) — 수기 수정분이 사라지는 복구용 escape hatch
 ```
 
 - 테스트/린트/빌드 스크립트는 없다. 검증은 **브라우저(또는 헤드리스 Chrome)로 직접 열어 동작 확인** + `node --check` 구문 검사로 한다.
-- 매 턴 종료 시 `Stop` 훅이 `extract-my-prompts.sh --all`을 실행해 `Prompt.md`를 자동 갱신한다. 훅 정의는 `.claude/settings.local.json`(gitignore, 이 머신 전용)에 있다.
+- 매 턴 종료 시 `Stop` 훅이 `extract-my-prompts.sh --append`를 실행해 `Prompt.md`에 **신규 프롬프트만 누적**한다(기존 내용·수기 수정분은 덮어쓰지 않음). 어디까지 기록했는지는 사이드카 `Prompt.md.state`(JSON, gitignore)의 timestamp 워터마크로 추적한다. 훅 정의는 `.claude/settings.local.json`(gitignore, 이 머신 전용)에 있다. 처음부터 전체를 다시 만들려면 `--all`(덮어쓰기).
 
 ## 아키텍처 — 정본(루트)
 

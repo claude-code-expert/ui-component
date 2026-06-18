@@ -1,6 +1,9 @@
 # Claude Code 로컬 설정(프롬프트 기록 훅 등) — 머신/개인 전용
 .claude/settings.local.json
 
+# 프롬프트 기록 증분 워터마크(사이드카) — 머신 전용, 커밋 대상 아님
+Prompt.md.state
+
 # Logs
 logs
 *.log
