@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UI Kit Playground — 컴포넌트 & 다이얼로그 통합</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
-<!-- Prism 코드 구문 강조 테마(라이트). app.css보다 먼저 — app.css가 패널 톤을 override -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-one-light.min.css">
+<!-- Prism 코드 구문 강조 테마(라이트, one-light). app.css보다 먼저 — app.css가 패널 톤을 override
+     one-light는 Prism 코어 기본 테마가 아니라 별도 prism-themes 패키지 소속 → prism/.../themes/가 아닌 prism-themes/ 경로여야 한다(코어 경로는 404). -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-one-light.min.css">
 <link rel="stylesheet" href="styles/app.css">
 </head>
 <body>
