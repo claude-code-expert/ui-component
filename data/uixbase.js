@@ -696,7 +696,7 @@ details > summary::-webkit-details-marker {
       Dashboard
   </div>
   <ul class="space-y-1 text-sm flex-1">
-    <li class="bg-white/10 text-white px-3 py-2 rounded-md cursor-pointer flex items-center gap-2 border-l-2 border-blue-500">
+    <li class="bg-white/10 text-white px-3 py-2 rounded-md cursor-pointer flex items-center gap-2">
         <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview
     </li>
     <li class="hover:bg-white/5 hover:text-white px-3 py-2 rounded-md cursor-pointer flex items-center gap-2 transition-colors">

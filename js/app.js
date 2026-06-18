@@ -2,27 +2,15 @@
   'use strict';
   var B = UIKIT.builders;
   var esc = B.esc, fnBody = B.fnBody, docPage = B.docPage, alertPage = B.alertPage;
-  var CATALOG = UIKIT.catalog, UIXBASE = UIKIT.uixbase, ALERT_DEMOS = UIKIT.feedback;
+  var UIXBASE = UIKIT.uixbase, ALERT_DEMOS = UIKIT.feedback;
   var ALERT_CSS = UIKIT.alertCss;
   var TW = 'https://cdn.tailwindcss.com';
   var LU = 'https://unpkg.com/lucide@latest';
 
-  // ---- normalize all three sources into one item list ----
+  // ---- normalize all sources into one item list ----
   var items = [];
-  var CAT_LABEL = { input:'입력 (Input)', nav:'내비게이션 (Navigation)', info:'정보 (Information)', container:'컨테이너 (Container)' };
 
-  // 1) Vanilla catalog (no deps)
-  CATALOG.forEach(function(c){
-    items.push({
-      group:'vanilla', sub: CAT_LABEL[c.cat] || c.cat,
-      key:'v-'+c.id, catKey:c.cat, name:c.name, nameKo:c.nameKo||'', desc:c.desc||'',
-      htmlSrc:c.html||'', cssSrc:c.css||'', jsSrc:c.js||'',
-      deps:'',
-      build:function(){ return docPage({ css:this.cssSrc, body:this.htmlSrc, js:this.jsSrc }); }
-    });
-  });
-
-  // 2) Tailwind / Lucide set
+  // 1) Tailwind / Lucide set
   UIXBASE.forEach(function(c){
     var jsBody = c.script ? fnBody(c.script) : '';
     items.push({
@@ -42,7 +30,7 @@
     });
   });
 
-  // 3) Feedback / alert patterns (engine-driven, no deps)
+  // 2) Feedback / alert patterns (engine-driven, no deps)
   Object.keys(ALERT_DEMOS).forEach(function(k){
     var d = ALERT_DEMOS[k];
     var tmp = document.createElement('div');
@@ -61,7 +49,7 @@
     });
   });
 
-  // 4) 공통 모달 시스템 (순수 CSS/JS, 의존성 없음)
+  // 3) 공통 모달 시스템 (순수 CSS/JS, 의존성 없음)
   (UIKIT.modals || []).forEach(function(c){
     items.push({
       group:'modal', sub:'공통 모달 시스템',
@@ -72,7 +60,7 @@
     });
   });
 
-  // 5) 프로토타입 / 디자인 시스템 (순수 CSS/JS) — head로 폰트 등 주입 가능
+  // 4) 프로토타입 / 디자인 시스템 (순수 CSS/JS) — head로 폰트 등 주입 가능
   (UIKIT.prototypes || []).forEach(function(c){
     items.push({
       group:'prototype', sub:c.sub||'프로토타입',
@@ -85,7 +73,6 @@
 
   // ---- sidebar ----
   var GROUPS = [
-    { id:'vanilla',  label:'기본 컴포넌트 · Vanilla (CSS/JS)', tag:'32', icon:'box' },
     { id:'tailwind', label:'기본 컴포넌트 · Tailwind + Lucide', tag:'32', icon:'wind' },
     { id:'modal',    label:'공통 모달 시스템', tag:'6', icon:'layers' },
     { id:'alert',    label:'피드백 · 알림 패턴 (다이얼로그 외)', tag:'10', icon:'bell' },
@@ -107,23 +94,11 @@
         return (it.name+' '+it.nameKo+' '+it.sub).toLowerCase().indexOf(query) >= 0;
       });
       if (!list.length) return;
-      if (g.id === 'vanilla'){
-        var order = { input:0, nav:1, info:2, container:3 };
-        list = list.slice().sort(function(a,b){ return (order[a.catKey]!=null?order[a.catKey]:9) - (order[b.catKey]!=null?order[b.catKey]:9); });
-      }
       var gh = document.createElement('div');
       gh.className = 'uk-group';
       gh.innerHTML = (g.icon?'<i data-lucide="'+g.icon+'"></i>':'')+'<span>'+esc(g.label)+'</span><span class="uk-group-tag">'+list.length+'</span>';
       menu.appendChild(gh);
-      var lastSub = null;
       list.forEach(function(it){
-        if (g.id === 'vanilla' && it.sub !== lastSub){
-          lastSub = it.sub;
-          var sh = document.createElement('div');
-          sh.className = 'uk-sub';
-          sh.textContent = it.sub;
-          menu.appendChild(sh);
-        }
         var b = document.createElement('button');
         b.className = 'uk-item' + (current && current.key === it.key ? ' active' : '');
         b.dataset.key = it.key;

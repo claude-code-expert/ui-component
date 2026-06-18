@@ -61,23 +61,28 @@ body{
 .uk-menu::-webkit-scrollbar-thumb{background:var(--border2);border-radius:8px}
 .uk-menu::-webkit-scrollbar-thumb:hover{background:var(--faint)}
 
-.uk-group{display:flex;align-items:center;gap:7px;padding:16px 10px 6px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
-.uk-group svg{width:13px;height:13px;flex-shrink:0}
+.uk-group{
+  display:flex;align-items:center;gap:7px;
+  margin:18px 2px 8px;padding:8px 12px;
+  border:1px solid var(--border);border-radius:6px;background:var(--panel2);
+  font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text);
+}
+.uk-group:first-child{margin-top:4px}
+.uk-group svg{width:13px;height:13px;flex-shrink:0;color:var(--dim)}
 .uk-group span:first-of-type{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.uk-group-tag{background:var(--panel2);color:var(--dim);border-radius:20px;padding:1px 8px;font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:600}
-
-.uk-sub{padding:8px 10px 4px;font-size:10px;font-weight:600;letter-spacing:.03em;color:var(--faint)}
+.uk-group-tag{background:#fff;color:var(--dim);border:1px solid var(--border);border-radius:20px;padding:1px 8px;font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:600}
 
 .uk-item{
-  display:flex;align-items:baseline;gap:8px;width:100%;text-align:left;background:none;border:0;
-  border-radius:8px;color:var(--dim);padding:8px 11px;font-size:13.5px;cursor:pointer;font-family:inherit;
-  transition:background .12s,color .12s;
+  display:flex;align-items:baseline;gap:8px;width:100%;text-align:left;background:none;
+  border:1px solid transparent;border-radius:8px;
+  color:var(--dim);padding:8px 11px;font-size:13.5px;cursor:pointer;font-family:inherit;
+  transition:background .12s,color .12s,border-color .12s;
 }
 .uk-item:hover{background:var(--panel2);color:var(--text)}
-.uk-item.active{background:var(--accent-weak);color:var(--accent-text);font-weight:600;box-shadow:inset 2px 0 0 var(--accent)}
+.uk-item.active{background:#fff;color:var(--text);font-weight:600;border-color:var(--border2)}
 .uk-item-name{flex:1}
 .uk-item-ko{font-size:11px;color:var(--faint);flex-shrink:0}
-.uk-item.active .uk-item-ko{color:var(--accent)}
+.uk-item.active .uk-item-ko{color:var(--dim)}
 
 /* ── main ── */
 .uk-main{overflow-y:auto;min-height:0;background:var(--bg)}

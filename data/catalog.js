@@ -773,11 +773,10 @@ document.addEventListener('click', () => {
 }
 .noti-toast {
   background: #fff; border: 1px solid #e2e8f0;
-  border-left: 3px solid #14b8a6; border-radius: 6px;
+  border-radius: 6px;
   padding: 10px 14px; display: flex; gap: 10px; align-items: center;
   font-size: 12px; box-shadow: 0 4px 12px rgba(15,23,42,.06);
 }
-.noti-toast.error { border-left-color: #f43f5e; }
 .noti-toast .ic { font-size: 16px; }`,
     js: `document.querySelectorAll('.noti-bell').forEach(b => {
   b.addEventListener('click', () => {

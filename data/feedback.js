@@ -493,7 +493,6 @@ UIKIT.alertCss = `:root {
     padding: 10px 24px;
     cursor: pointer;
     transition: all 0.2s;
-    border-left: 3px solid transparent;
     font-size: 14px;
     color: var(--text-dim);
     font-weight: 400;
@@ -507,7 +506,6 @@ UIKIT.alertCss = `:root {
   .menu-item.active {
     background: var(--accent-glow);
     color: var(--accent);
-    border-left-color: var(--accent);
     font-weight: 500;
   }
 
@@ -696,11 +694,7 @@ UIKIT.alertCss = `:root {
     min-width: 300px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    border-left: 3px solid var(--success);
   }
-
-  .toast.error { border-left-color: var(--danger); }
-  .toast.warning { border-left-color: var(--warning); }
 
   .toast-icon { font-size: 18px; }
   .toast-close {

@@ -91,7 +91,7 @@ UIKIT.modals = [
 <div class="nt-stack" id="nt-stack"></div>`,
     css:`.nt-trigger{background:#6366f1;color:#fff;border:none;padding:9px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
 .nt-stack{position:fixed;top:16px;right:16px;display:flex;flex-direction:column;gap:10px;z-index:1000;max-width:300px}
-.nt-card{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid #e2e8f0;border-left:3px solid #6366f1;border-radius:8px;padding:12px 14px;box-shadow:0 8px 24px rgba(15,23,42,.12);animation:nt-in .25s ease}
+.nt-card{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;animation:nt-in .25s ease}
 @keyframes nt-in{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
 .nt-ic{width:24px;height:24px;border-radius:50%;background:#eef2ff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .nt-body{flex:1;min-width:0}
@@ -125,7 +125,7 @@ UIKIT.modals = [
 <div class="ts-stack" id="ts-stack"></div>`,
     css:`.ts-trigger{background:#6366f1;color:#fff;border:none;padding:9px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
 .ts-stack{position:fixed;bottom:18px;right:18px;display:flex;flex-direction:column;gap:8px;align-items:flex-end;z-index:1000}
-.ts-toast{display:flex;align-items:center;gap:8px;background:#0f172a;color:#fff;font-size:13px;padding:10px 14px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.25);position:relative;overflow:hidden;animation:ts-in .25s ease;min-width:200px}
+.ts-toast{display:flex;align-items:center;gap:8px;background:#0f172a;color:#fff;font-size:13px;padding:10px 14px;border-radius:8px;border:1px solid #334155;position:relative;overflow:hidden;animation:ts-in .25s ease;min-width:200px}
 @keyframes ts-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .ts-toast .ts-ic{color:#34d399;font-weight:700}
 .ts-bar{position:absolute;left:0;bottom:0;height:2px;background:#34d399;animation:ts-bar 2.5s linear forwards}
