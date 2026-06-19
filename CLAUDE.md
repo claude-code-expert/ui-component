@@ -64,8 +64,16 @@ const components = [
 | `alert-ui-showcase.html` | 오버레이/알림 **동작 패턴**의 출처(`demos` 객체: render/fire/code). ⚠️ 시각 스타일은 그라데이션·글로우·backdrop-blur를 써서 아래 디자인 규칙을 **위반**하므로 비주얼은 베끼지 말 것. |
 | `label-chip-system.html` | 라벨/칩 시스템 — 17색 팔레트, 크기·상태, 우선순위 배지/Select, COLOR.json 토큰. |
 | `colorpicker.html`, `color-personal-card.html`, `ui-elements-demo.html` | 보조 데모. |
+| `component-portfolio.html` | **요구 사양에 가장 근접한 정본 prototype.** 32종 데이터 모델(`ELEMENTS =
+  [{n,name,ko,cat,desc,html,css,js},…]`)을 카테고리 그룹 사이드바 + 우측 메인(이름·한글명·뱃지·설명 +
+  Preview/HTML/CSS/JS 탭)으로 렌더한다. 미리보기는 iframe `srcdoc`으로 컴포넌트 CSS를 페이지와 격리하고, 복사
+  버튼은 `navigator.clipboard.writeText()` + "복사됨 ✓" 토스트로 동작한다. 폰트는 Noto Sans KR(본문) /
+  JetBrains Mono(코드), 무채색 + `#2563EB` 단일 액센트로 anti-ai-slop 규칙을 준수한다.
 
-⚠️ 사용자 프롬프트가 참조한 `docs/resource/component-portfolio.html`은 **실제로 존재하지 않는다**. 구조 참고가 필요하면 위 카탈로그/`ui-component.html`을 대신 사용한다.
+  **`ui-kit-playground.html` 빌드는 이 파일의 구조·코드를 시작점으로 삼고, 좌측 리스트에 오버레이/알림 패턴만
+  추가한다.** |
+
+
 
 ## 강제 디자인 규칙 — anti-ai-slop
 
