@@ -1,0 +1,47 @@
+name: Deploy UI Kit to GitHub Pages
+
+# main 브랜치에 푸시하면 자동으로 GitHub Pages에 배포된다.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# GitHub Pages 배포에 필요한 권한
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 동시에 한 번만 배포 (중복 실행 시 이전 것 취소)
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 게시할 앱 파일만 _site에 모은다.
+      # (Prompt.md·extract-my-prompts.sh 등 내부 파일은 공개 사이트에서 제외)
+      - name: Stage site files
+        run: |
+          mkdir -p _site
+          cp index.html ui-kit-playground.html _site/
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
